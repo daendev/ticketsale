@@ -9,6 +9,7 @@ contract TicketSale {
     mapping (uint16 => address) ticketsSold;
     uint16 ticketCount;
     uint256 private ticketPrice;
+    mapping (address => address) swapOffers;
     
     // </contract_variables>
 
@@ -32,15 +33,22 @@ contract TicketSale {
     }
 
     function offerSwap(address partner) public {
-        // TODO
+        require(tickets[msg.sender] > 0); // sender has ticket
+        require(partner != msg.sender); // partner is not sender
+        swapOffers[msg.sender] = partner;
     }
 
     function acceptSwap(address partner) public {
-        // TODO
+        require(tickets[msg.sender] > 0); // sender has a ticket
+        require(swapOffers[partner] == msg.sender); // partner wants to swap with sender
+        (tickets[msg.sender], tickets[partner]) = (tickets[partner], tickets[msg.sender]); // swap
+        ticketsSold[tickets[msg.sender]] = msg.sender;
+        ticketsSold[tickets[partner]] = partner;
     }
 
     function withdraw() public {
-        // TODO
+        require(msg.sender == owner); // sender is owner
+        msg.sender.transfer(address(this).balance);
     }
 
 }
