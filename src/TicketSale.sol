@@ -44,6 +44,7 @@ contract TicketSale {
         (tickets[msg.sender], tickets[partner]) = (tickets[partner], tickets[msg.sender]); // swap
         ticketsSold[tickets[msg.sender]] = msg.sender;
         ticketsSold[tickets[partner]] = partner;
+        swapOffers[partner] = 0;
     }
 
     function withdraw() public {
